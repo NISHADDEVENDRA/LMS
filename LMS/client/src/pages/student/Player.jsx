@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 import Loading from "../../components/student/Loading"
 import axios from "axios";
 const Player = () => {
-  const {enrolledCourses,calculateChaptertime,backendUrl, getToken, userData, fetchUserEnrolledCourses } =useContext(AppContext)
+  const {enrolledCourses,calculateChaptertime, backendUrl, getToken, userData, fetchUserEnrolledCourses } =useContext(AppContext)
   const {courseId} = useParams()
   const [courseData,setCourseData]=useState(null)
   const [openSections, setOpenSections] = useState({});
@@ -28,8 +28,6 @@ const Player = () => {
           }
         })
       }
-
-
     })
   }
   const toggleSection = (index) => {
@@ -40,7 +38,7 @@ const Player = () => {
   };
 
    useEffect(()=>{
-    if(enrolledCourses.length>0){
+    if(enrolledCourses.length > 0){
       getCourseData()
     }
    },[enrolledCourses])
@@ -79,10 +77,10 @@ const Player = () => {
     try {
       const token = await getToken()
       const {data}= await axios.post(backendUrl+'/api/user/add-rating',{courseId , rating},{headers:{Authorization: `Bearer ${token}`}})
-         
+      console.log(data)
       if(data.success){
-          fetchUserEnrolledCourses()
           toast.success(data.message)
+          fetchUserEnrolledCourses()
       }else{
         toast.error(data.message)
       }
