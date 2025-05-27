@@ -131,7 +131,7 @@ export const getUserCourseProgress = async (req,res)=>{
 
 export const addUserRating = async(req,res)=>{
     const userId = req.auth.userId
-    const {courseId,rating}=req.body
+    const {courseId , rating} = req.body
 
     if(!courseId  || !userId || !rating || rating < 1 || rating > 5){
         return res.json({success:false,message:'Invalid Details'})
@@ -156,7 +156,6 @@ export const addUserRating = async(req,res)=>{
        }else{
         course.courseRatings.push({userId,rating})
        }
-
        await course.save()
        return res.json({success:true,message:'Rating added'})
     } catch (error) {
