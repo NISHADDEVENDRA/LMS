@@ -35,7 +35,7 @@ const AddCourse = () => {
       chapterTitle: title, 
       chapterContent: [], 
       collapsed: false, 
-      chapterorder: chapters.length > 0 ? chapters.slice(-1)[0].chapterOrder + 1:1, 
+      chapterOrder: chapters.length > 0 ? chapters.slice(-1)[0].chapterOrder + 1 : 1, 
       }; 
       setChapters([...chapters, newChapter]); 
       }
@@ -44,14 +44,14 @@ const AddCourse = () => {
   } else if (action==='toggle'){
     setChapters(
       chapters.map((chapter)=>
-      chapter.chapterId === chapterId ? {...chapter, collapsed: ! chapter.collapsed}: chapter)
+      chapter.chapterId === chapterId ? {...chapter, collapsed: !chapter.collapsed}: chapter)
     )
   }
 }
 
 const handleLecture  = (action, chapterId, lectureIndex) => { 
   if (action === 'add') { 
-  setCurrentChapterId (chapterId); 
+  setCurrentChapterId(chapterId); 
   setShowPopup(true); 
   } else if (action === 'remove') { 
   setChapters( 
@@ -74,7 +74,7 @@ const addLecture = () => {
   chapterContent.slice(-1)[0].lectureOrder + 1 : 1, 
   lectureId: uniqid() 
   }; 
-  9 
+   
   chapter.chapterContent.push(newLecture); 
   } 
   return chapter; 
@@ -111,6 +111,7 @@ const addLecture = () => {
 
     const token =await getToken()
     const {data}= await axios.post(backendUrl+'/api/educator/add-course',formData,{headers:{Authorization: `Bearer ${token}`}})
+   console.log(data)
     if(data.success){
       toast.success(data.message)
       setCourseTitle('')
@@ -159,7 +160,7 @@ const addLecture = () => {
           <p>Course Thumbnail</p>
           <label className='flex items-center gap-3' htmlFor="thumbnailImage">
             <img src={assets.file_upload_icon} alt="" className='p-3 bg-blue-500 rounded' />
-            <input type="file" id='thumbnailImage' onChange={e=>setImage(e.target.files(0))} accept="image/*" hidden  />
+            <input type="file" id='thumbnailImage' onChange={e=>setImage(e.target.files[0])} accept="image/*" hidden  />
             <img className='max-h-10' src={image ? URL.createObjectURL(image) : ''} alt="" />
           </label>
         </div>
@@ -167,7 +168,7 @@ const addLecture = () => {
 
         <div className='flex flex-col gap-1'>
           <p>Discount %</p>
-          <input onChange={e=> setDiscount(e.target.value)} value={discount} type="number" placeholder='0' min={0} max={0} className='outline-none md:py-2.5 py-2 w-28 px-3 rounded border border-gray-500 ' required />
+          <input onChange={e=> setDiscount(e.target.value)} value={discount} type="number" placeholder='0' min={0} max={100} className='outline-none md:py-2.5 py-2 w-28 px-3 rounded border border-gray-500 ' required />
         </div>
 
         {/*Adding Chapter &lectures*/}
@@ -177,7 +178,7 @@ const addLecture = () => {
               <div className='flex justify-between items-center p-4 border-b '>
                 <div className='flex items-center'>
                    <img onClick={()=> handleChapter('toggle' , chapter.chapterId)} src={assets.dropdown_icon} className={`mr-2 cursor-pointer transition-all ${chapter.collapsed && "-rotate-90"}`} width={14} alt="" />
-                   <span className='font-semibold'>{chapterIndex+1}{chapter.chapterTitle}</span>
+                   <span className='font-semibold'>{chapterIndex + 1}{chapter.chapterTitle}</span>
                 </div>
                 <span className='text-gray-500'>{chapter.chapterContent.length} lectures</span>
                 <img onClick={()=> handleChapter('remove' ,chapter.chapterId)}  className='cursor-pointer' src={assets.cross_icon} alt="" />
@@ -186,7 +187,7 @@ const addLecture = () => {
                 <div className='p-4'>
                   {chapter.chapterContent.map((lecture,lectureIndex)=>(
                     <div key={lectureIndex} className='flex justify-between items-center mb-2'>
-                      <span >{lectureIndex+1} {lecture.lectureTitle}- {lecture.lectureDuration} mins <a href={lecture.lectureUrl} target='blank' className='text-blue-500'>Link</a> - {lecture.isPreviewFree ? 'Free Preview' : 'Paid'}</span>
+                      <span >{lectureIndex+1} {lecture.lectureTitle} - {lecture.lectureDuration} mins <a href={lecture.lectureUrl} target='blank' className='text-blue-500'>Link</a> - {lecture.isPreviewFree ? 'Free Preview' : 'Paid'}</span>
                       <img src={assets.cross_icon} className='cursor-pointer' alt="" onClick={()=>handleLecture('remove',chapter.chapterId ,lectureIndex)}/>
                     </div>
                   ))}
